@@ -1,51 +1,54 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Button,
-  TextInput,
-  FlatList,
-} from "react-native";
+import { StyleSheet, View, FlatList, Button } from "react-native";
+// Custom imports
+import GoalItem from "./components/GoalItem";
+import GoalInput from "./components/GoalInput";
 
 export default function App() {
   const [state, updateState] = useState({
-    enteredGoal: "",
     courseGoals: [],
+    addMode: false,
   });
 
-  const goalInputHandler = (enteredText) => {
-    updateState({ ...state, enteredGoal: enteredText });
-  };
-
-  const addGoalHandler = () => {
+  const addGoalHandler = (goal) => {
     let newCourseGoals = [
       ...state.courseGoals,
-      { key: Math.random().toString(), value: state.enteredGoal },
+      { id: Math.random().toString(), value: goal },
     ];
-    updateState({ ...state, courseGoals: newCourseGoals });
+    let update = { courseGoals: newCourseGoals, addMode: false };
+    updateState({ ...state, ...update });
+  };
+
+  const removeGoalHandler = (id) => {
+    updateState({
+      ...state,
+      courseGoals: state.courseGoals.filter((goal) => goal.id !== id),
+    });
+  };
+
+  const setAddMode = (status) => {
+    updateState({ ...state, addMode: status });
   };
 
   return (
     <View style={styles.screen}>
-      <View style={styles.inputContainer}>
-        <TextInput
-          placeholder="Course Goal"
-          style={styles.input}
-          onChangeText={goalInputHandler}
-          value={state.enteredGoal}
-        />
-        <Button title="ADD" onPress={addGoalHandler} />
-      </View>
+      <Button title="Add new goal" onPress={() => setAddMode(true)} />
+      <GoalInput
+        onAddGoal={addGoalHandler}
+        onCancel={() => setAddMode(false)}
+        visible={state.addMode}
+      />
       <FlatList
         data={state.courseGoals}
         renderItem={(itemData) => (
-          <View style={styles.listItem}>
-            <Text>{itemData.item.value}</Text>
-          </View>
+          <GoalItem
+            id={itemData.item.id}
+            title={itemData.item.value}
+            onDelete={removeGoalHandler}
+          />
         )}
-      ></FlatList>
+      />
       <StatusBar style="auto" />
     </View>
   );
@@ -54,22 +57,5 @@ export default function App() {
 const styles = StyleSheet.create({
   screen: {
     padding: 50,
-  },
-  inputContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  input: {
-    width: "80%",
-    borderColor: "black",
-    borderWidth: 1,
-    padding: 10,
-  },
-  listItem: {
-    padding: 10,
-    backgroundColor: "#ccc",
-    borderColor: "black",
-    borderWidth: 1,
   },
 });
