@@ -12,6 +12,7 @@ import {
 import Color from "../theme/Color";
 import Card from "../components/Card";
 import Input from "../components/Input";
+import NumberContainer from "../components/NumberContainer";
 
 const StartGameScreen = (props) => {
   const [state, updateState] = useState({
@@ -35,6 +36,7 @@ const StartGameScreen = (props) => {
 
   const confirmInputHandler = () => {
     const chosenNumber = parseInt(state.enteredValue);
+    // Check for numbers that are not accepted
     if (isNaN(chosenNumber) || chosenNumber == 0) {
       Alert.alert("Invalid number!", "Must be between 0 and 99", [
         { text: "Okay", style: "cancel", onpress: resetInputHandler },
@@ -47,12 +49,22 @@ const StartGameScreen = (props) => {
       confirmed: true,
     };
     updateState({ ...state, ...update });
+    Keyboard.dismiss();
   };
 
   // Logic
   let confirmedOutput;
   if (state.confirmed) {
-    confirmedOutput = <Text>Chosen number: {state.selectedNumber}</Text>;
+    confirmedOutput = (
+      <Card style={styles.summaryContainer}>
+        <Text>You selected</Text>
+        <NumberContainer>{state.selectedNumber}</NumberContainer>
+        <Button
+          title="START GAME"
+          onPress={() => props.onStartGame(state.selectedNumber)}
+        ></Button>
+      </Card>
+    );
   }
 
   return (
@@ -118,6 +130,10 @@ const styles = StyleSheet.create({
   input: {
     width: 50,
     textAlign: "center",
+  },
+  summaryContainer: {
+    marginTop: 20,
+    alignItems: "center",
   },
 });
 
