@@ -58,7 +58,6 @@ const GameScreen = (props) => {
       currentHigh.current,
       state.currentGuess
     );
-    console.log(state.rounds);
     const update = { currentGuess: nextNumber, rounds: state.rounds + 1 };
     updateState({ ...state, ...update });
   };
