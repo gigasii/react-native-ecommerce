@@ -17,6 +17,15 @@ const generateRandomBetween = (min, max, exclude) => {
   return rndNum;
 };
 
+const renderListItem = (key, value, roundNumber) => {
+  return (
+    <View key={key} style={styles.listItem}>
+      <Text style={Font.bodyText}># {roundNumber}</Text>
+      <Text style={Font.bodyText}>{value}</Text>
+    </View>
+  );
+};
+
 const GameScreen = (props) => {
   // References
   const currentLow = useRef(1);
@@ -82,13 +91,13 @@ const GameScreen = (props) => {
           <Ionicons name="add" size={24} color="white" />
         </MainButton>
       </Card>
-      <ScrollView>
-        {state.pastGusses.map((guess, index) => (
-          <View key={index}>
-            <Text>{guess}</Text>
-          </View>
-        ))}
-      </ScrollView>
+      <View style={styles.listContainer}>
+        <ScrollView contentContainerStyle={styles.list}>
+          {state.pastGusses.map((guess, index) =>
+            renderListItem(index, guess, state.pastGusses.length - index)
+          )}
+        </ScrollView>
+      </View>
     </View>
   );
 };
@@ -105,6 +114,24 @@ const styles = StyleSheet.create({
     marginTop: 20,
     width: 300,
     maxWidth: "90%",
+  },
+  listContainer: {
+    flex: 1,
+  },
+  list: {
+    flexGrow: 1,
+    alignItems: "center",
+    justifyContent: "flex-end",
+  },
+  listItem: {
+    borderColor: "black",
+    borderWidth: 1,
+    padding: 15,
+    marginVertical: 10,
+    backgroundColor: "white",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "60%",
   },
 });
 
