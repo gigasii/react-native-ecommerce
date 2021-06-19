@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { View, Text, StyleSheet, Alert, ScrollView } from "react-native";
+import { View, Text, StyleSheet, Alert, FlatList } from "react-native";
 // Custom imports
 import NumberContainer from "../components/NumberContainer";
 import Card from "../components/Card";
@@ -17,9 +17,9 @@ const generateRandomBetween = (min, max, exclude) => {
   return rndNum;
 };
 
-const renderListItem = (key, value, roundNumber) => {
+const renderListItem = (value, roundNumber) => {
   return (
-    <View key={key} style={styles.listItem}>
+    <View style={styles.listItem}>
       <Text style={Font.bodyText}># {roundNumber}</Text>
       <Text style={Font.bodyText}>{value}</Text>
     </View>
@@ -39,7 +39,7 @@ const GameScreen = (props) => {
   // State
   const [state, updateState] = useState({
     currentGuess: initialGuess,
-    pastGusses: [initialGuess],
+    pastGusses: [initialGuess.toString()],
   });
 
   // Side-effects
@@ -74,7 +74,7 @@ const GameScreen = (props) => {
     );
     const update = {
       currentGuess: nextNumber,
-      pastGusses: [nextNumber, ...state.pastGusses],
+      pastGusses: [nextNumber.toString(), ...state.pastGusses],
     };
     updateState({ ...state, ...update });
   };
@@ -92,11 +92,17 @@ const GameScreen = (props) => {
         </MainButton>
       </Card>
       <View style={styles.listContainer}>
-        <ScrollView contentContainerStyle={styles.list}>
-          {state.pastGusses.map((guess, index) =>
-            renderListItem(index, guess, state.pastGusses.length - index)
-          )}
-        </ScrollView>
+        <FlatList
+          contentContainerStyle={styles.list}
+          keyExtractor={(item) => item}
+          data={state.pastGusses}
+          renderItem={(itemData) =>
+            renderListItem(
+              itemData.item,
+              state.pastGusses.length - itemData.index
+            )
+          }
+        />
       </View>
     </View>
   );
@@ -117,11 +123,11 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     flex: 1,
+    width: "60%",
   },
   list: {
     flexGrow: 1,
-    alignItems: "center",
-    justifyContent: "flex-end",
+    //justifyContent: "flex-end",
   },
   listItem: {
     borderColor: "black",
@@ -131,7 +137,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     flexDirection: "row",
     justifyContent: "space-between",
-    width: "60%",
+    width: "100%",
   },
 });
 
