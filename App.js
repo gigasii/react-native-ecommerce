@@ -35,7 +35,7 @@ export default function App() {
   }
 
   const startGameHandler = (selectedNumber) => {
-    let update = { userNumber: selectedNumber, guessRounds: 0 };
+    const update = { userNumber: selectedNumber, guessRounds: 0 };
     updateState({ ...state, ...update });
   };
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, Dimensions } from "react-native";
 // Custom imports
 import Font from "../theme/Font";
 import Color from "../theme/Color";
@@ -37,22 +37,24 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    paddingVertical: 10,
   },
   image: {
     width: "100%",
     height: "100%",
   },
   imageContainer: {
-    width: 300,
-    height: 300,
-    borderRadius: 200,
+    width: Dimensions.get("window").width * 0.7,
+    height: Dimensions.get("window").width * 0.7,
+    borderRadius: (Dimensions.get("window").width * 0.7) / 2,
     borderWidth: 3,
     borderColor: "black",
     overflow: "hidden",
-    marginVertical: 30,
+    marginVertical: Dimensions.get("window").height / 30,
   },
   resultContainer: {
     marginHorizontal: 20,
+    marginVertical: Dimensions.get("window").height / 60,
   },
   highlight: {
     color: Color.primary,
