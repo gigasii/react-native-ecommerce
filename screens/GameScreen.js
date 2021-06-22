@@ -53,7 +53,7 @@ const GameScreen = (props) => {
   });
 
   // Locks orientation
-  ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
+  //ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
 
   // Side-effects
   const { userChoice, onGameOver } = props;
