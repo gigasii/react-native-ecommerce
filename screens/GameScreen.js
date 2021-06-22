@@ -13,6 +13,7 @@ import Card from "../components/Card";
 import Font from "../theme/Font";
 import MainButton from "../components/MainButton";
 import { Ionicons } from "@expo/vector-icons";
+import * as ScreenOrientation from "expo-screen-orientation";
 
 const generateRandomBetween = (min, max, exclude) => {
   min = Math.ceil(min);
@@ -51,6 +52,9 @@ const GameScreen = (props) => {
     deviceHeight: Dimensions.get("window").height,
   });
 
+  // Locks orientation
+  ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
+
   // Side-effects
   const { userChoice, onGameOver } = props;
 
@@ -61,7 +65,6 @@ const GameScreen = (props) => {
   }, [state.currentGuess, userChoice, onGameOver]);
 
   useEffect(() => {
-    console.log("Enter");
     // Orientation listener
     const updateLayout = () => {
       const update = {
