@@ -4,6 +4,11 @@ import { Text, View } from "react-native";
 // Custom imports
 import * as Font from "expo-font";
 import AppLoading from "expo-app-loading";
+import MealsNavigator from "./navigation/MealsNavigation";
+import { enableScreens } from "react-native-screens";
+
+// React-Navigation uses native screen components of respective device for optimisation
+enableScreens();
 
 // Load assets asynchronously before app starts
 const fetchFonts = () => {
@@ -30,10 +35,5 @@ export default function App() {
     );
   }
 
-  return (
-    <View>
-      <Text>Hello World</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+  return <MealsNavigator />;
 }
