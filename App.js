@@ -1,6 +1,5 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
-import { Text, View } from "react-native";
 // Custom imports
 import * as Font from "expo-font";
 import AppLoading from "expo-app-loading";
