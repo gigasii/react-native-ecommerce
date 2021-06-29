@@ -13,7 +13,7 @@ const MealDetailScreen = (props) => {
   );
 };
 
-// Header styling
+// Screen styling
 MealDetailScreen.navigationOptions = (navigationData) => {
   // Retrieve parameters passed to screen
   const mealId = navigationData.navigation.getParam("mealId");
