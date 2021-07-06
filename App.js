@@ -1,10 +1,12 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
+import { Provider } from "react-redux";
 // Custom imports
 import * as Font from "expo-font";
 import AppLoading from "expo-app-loading";
 import MealsNavigator from "./navigation/MealsNavigation";
 import { enableScreens } from "react-native-screens";
+import store from "./store/store";
 
 // React-Navigation uses native screen components of respective device for optimisation
 enableScreens();
@@ -34,5 +36,9 @@ export default function App() {
     );
   }
 
-  return <MealsNavigator />;
+  return (
+    <Provider store={store}>
+      <MealsNavigator />
+    </Provider>
+  );
 }
