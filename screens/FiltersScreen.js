@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, Switch, Platform } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
+import { useDispatch } from "react-redux";
 // Custom imports
 import HeaderButton from "../components/HeaderButton";
 import Colors from "../constants/Colors";
+import { setFilters } from "../store/actions/meal";
 
 const FilterSwitch = (props) => {
   return (
@@ -29,14 +31,15 @@ const FilterScreen = (props) => {
   });
 
   // Callback to resave filters
+  const dispatch = useDispatch();
   const saveFilters = () => {
     const appliedFilters = {
       glutenFree: state.isGlutenFree,
       lactoseFree: state.isLactoseFree,
       vegan: state.isVegan,
-      isVegetarian: state.isVegetarian,
+      vegetarian: state.isVegetarian,
     };
-    console.log(appliedFilters);
+    dispatch(setFilters(appliedFilters));
   };
 
   // Side-effects
