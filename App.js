@@ -1,29 +1,13 @@
-import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react";
-import { StyleSheet, Text, View, Button } from "react-native";
+import React from "react";
+import { Provider } from "react-redux";
+// Custom imports
+import store from "./store/store";
+import ShopNavigator from "./navigation/ShopNavigator";
 
 export default function App() {
-  const [outputText, setOutputText] = useState(
-    "Open up App.js to start working on your app!"
-  );
-
   return (
-    <View style={styles.container}>
-      <Text>{outputText}</Text>
-      <Button
-        title="Change Text"
-        onPress={() => setOutputText("Text changed")}
-      />
-      <StatusBar style="auto" />
-    </View>
+    <Provider store={store}>
+      <ShopNavigator />
+    </Provider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
