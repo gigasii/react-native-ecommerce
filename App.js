@@ -19,6 +19,7 @@ export default function App() {
     fontLoaded: false,
   });
 
+  // Load assets asynchronously before app starts
   if (!state.fontLoaded) {
     return (
       <AppLoading
