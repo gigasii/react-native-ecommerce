@@ -47,6 +47,7 @@ const EditProductScreen = (props) => {
         productsActions.createProduct(title, description, imageUrl, +price)
       );
     }
+    props.navigation.goBack();
   }, [prodId, title, description, imageUrl, price]);
 
   // Update handler with latest input changes
