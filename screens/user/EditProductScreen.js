@@ -2,22 +2,22 @@ import React, { useEffect, useCallback, useReducer } from "react";
 import {
   View,
   ScrollView,
-  Text,
-  TextInput,
   StyleSheet,
   Platform,
   Alert,
+  KeyboardAvoidingView,
 } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { useSelector, useDispatch } from "react-redux";
 // Custom imports
 import HeaderButton from "../../components/UI/HeaderButton";
 import * as productsActions from "../../store/actions/products";
+import Input from "../../components/UI/Input";
 
 // Constants
 const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
 
-// Reducer (Action Event-listener)
+// Reducer (Actions event-listener)
 const formReducer = (state, action) => {
   switch (action.type) {
     case FORM_INPUT_UPDATE:
@@ -31,8 +31,14 @@ const formReducer = (state, action) => {
       };
       let updatedFormIsValid = true;
       for (const key in updatedValidities) {
-        updatedFormIsValid = updatedValidities[key];
+        // One of the entry is invalid
+        if (!updatedValidities[key]) {
+          updatedFormIsValid = false;
+          break;
+        }
       }
+      console.log(updatedValues);
+      // Update state
       return {
         inputValues: updatedValues,
         inputValidities: updatedValidities,
@@ -109,60 +115,74 @@ const EditProductScreen = (props) => {
   }, [submitHandler]);
 
   // Input change handler
-  const inputChangeHandler = (text, inputIdentifier) => {
-    // Validation
-    let isValid = false;
-    if (text.trim().length > 0) {
-      isValid = true;
-    }
-    // Dispatch action
+  const inputChangeHandler = (inputIdentifier, inputValue, inputValidity) => {
     dispatchFormState({
       type: FORM_INPUT_UPDATE,
-      value: text,
-      isValid: isValid,
+      value: inputValue,
+      isValid: inputValidity,
       input: inputIdentifier,
     });
   };
 
   return (
-    <ScrollView>
-      <View style={styles.form}>
-        <View style={styles.formControl}>
-          <Text style={styles.label}>Title</Text>
-          <TextInput
-            style={styles.input}
-            value={formState.inputValues.title}
-            onChangeText={(text) => inputChangeHandler(text, "title")}
+    <KeyboardAvoidingView
+      style={styles.keyboard}
+      behavior="padding"
+      keyboardVerticalOffset={50}
+    >
+      <ScrollView>
+        <View style={styles.form}>
+          <Input
+            id="title"
+            label="Title"
+            errorText="Invalid title"
+            keyboardType="default"
+            autoCapitalize="sentences"
+            autoCorrect
+            returnKeyType="next"
+            onInputChange={inputChangeHandler}
+            initiallyValid={editedProduct}
+            required
           />
-        </View>
-        <View style={styles.formControl}>
-          <Text style={styles.label}>Image URL</Text>
-          <TextInput
-            style={styles.input}
-            value={formState.inputValues.imageUrl}
-            onChangeText={(text) => inputChangeHandler(text, "imageUrl")}
+          <Input
+            id="imageUrl"
+            label="Image Url"
+            errorText="Invalid image url"
+            keyboardType="default"
+            returnKeyType="next"
+            onInputChange={inputChangeHandler}
+            initiallyValid={editedProduct}
+            required
           />
-        </View>
-        {editedProduct ? null : (
-          <View style={styles.formControl}>
-            <Text style={styles.label}>Price</Text>
-            <TextInput
-              style={styles.input}
-              value={formState.inputValues.price}
-              onChangeText={(text) => inputChangeHandler(text, "price")}
+          {editedProduct ? null : (
+            <Input
+              id="price"
+              label="Price"
+              errorText="Invalid price"
+              keyboardType="decimal-pad"
+              returnKeyType="next"
+              onInputChange={inputChangeHandler}
+              required
+              min={0.1}
             />
-          </View>
-        )}
-        <View style={styles.formControl}>
-          <Text style={styles.label}>Description</Text>
-          <TextInput
-            style={styles.input}
-            value={formState.inputValues.description}
-            onChangeText={(text) => inputChangeHandler(text, "description")}
+          )}
+          <Input
+            id="description"
+            label="Description"
+            errorText="Invalid description!"
+            keyboardType="default"
+            autoCapitalize="sentences"
+            autoCorrect
+            multiline
+            numberOfLines={3}
+            onInputChange={inputChangeHandler}
+            initiallyValid={editedProduct}
+            required
+            minLength={1}
           />
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -190,18 +210,8 @@ const styles = StyleSheet.create({
   form: {
     margin: 20,
   },
-  formControl: {
-    width: "100%",
-  },
-  label: {
-    fontFamily: "open-sans-bold",
-    marginVertical: 8,
-  },
-  input: {
-    paddingHorizontal: 2,
-    paddingVertical: 5,
-    borderBottomColor: "#ccc",
-    borderBottomWidth: 1,
+  keyboard: {
+    flex: 1,
   },
 });
 
