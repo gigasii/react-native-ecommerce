@@ -52,7 +52,6 @@ const ProductsOverviewScreen = (props) => {
 
 // Screen styling
 ProductsOverviewScreen.navigationOptions = (navData) => {
-  console.log(navData.navigation);
   return {
     headerTitle: "All Products",
     headerLeft: () => (
