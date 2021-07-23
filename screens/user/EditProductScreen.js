@@ -37,7 +37,6 @@ const formReducer = (state, action) => {
           break;
         }
       }
-      console.log(updatedValues);
       // Update state
       return {
         inputValues: updatedValues,
