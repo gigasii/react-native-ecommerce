@@ -9,37 +9,41 @@ const BASE_URL = "http://192.168.0.199:8080/product";
 
 export const fetchProducts = () => {
   return async (dispatch) => {
-    try {
-      // Request for products from server
-      const res = await fetch(`${BASE_URL}/fetch-products`);
-      if (!res.ok) {
-        throw new Error("Request to fetch products failed");
-      }
-      const products = await res.json();
-      // Convert data recieved
-      const loadedProducts = [];
-      products.forEach((product) => {
-        loadedProducts.push(
-          new Product(
-            product._id,
-            "u1",
-            product.title,
-            product.imageUrl,
-            product.description,
-            product.price
-          )
-        );
-      });
-      // Update redux store
-      dispatch({ type: SET_PRODUCTS, products: loadedProducts });
-    } catch (err) {
-      throw err;
+    // Request for products from server
+    const res = await fetch(`${BASE_URL}/fetch-products`);
+    if (!res.ok) {
+      throw new Error("Request to fetch products failed");
     }
+    const products = await res.json();
+    // Convert data recieved
+    const loadedProducts = [];
+    products.forEach((product) => {
+      loadedProducts.push(
+        new Product(
+          product._id,
+          "u1",
+          product.title,
+          product.imageUrl,
+          product.description,
+          product.price
+        )
+      );
+    });
+    // Update redux store
+    dispatch({ type: SET_PRODUCTS, products: loadedProducts });
   };
 };
 
 export const deleteProduct = (productId) => {
-  return { type: DELETE_PRODUCT, payload: productId };
+  return async (dispatch) => {
+    // Send a request to server
+    const res = await fetch(`${BASE_URL}/delete-product/${productId}`);
+    if (!res.ok) {
+      throw new Error("Request to delete product failed");
+    }
+    // Update redux store
+    dispatch({ type: DELETE_PRODUCT, payload: productId });
+  };
 };
 
 export const createProduct = (title, description, imageUrl, price) => {
@@ -73,13 +77,33 @@ export const createProduct = (title, description, imageUrl, price) => {
 };
 
 export const updateProduct = (id, title, description, imageUrl) => {
-  return {
-    type: UPDATE_PRODUCT,
-    pid: id,
-    productData: {
-      title,
-      description,
-      imageUrl,
-    },
+  return async (dispatch) => {
+    // Send a request to server
+    const res = await fetch(`${BASE_URL}/update-product`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id,
+        title,
+        description,
+        imageUrl,
+      }),
+    });
+    if (!res.ok) {
+      throw new Error("Request to update product failed");
+    }
+    console.log("Passes");
+    // Updates redux store
+    dispatch({
+      type: UPDATE_PRODUCT,
+      pid: id,
+      productData: {
+        title,
+        description,
+        imageUrl,
+      },
+    });
   };
 };

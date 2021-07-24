@@ -37,11 +37,10 @@ const ProductsOverviewScreen = (props) => {
     updateState({ isLoading: true, error: null });
     try {
       await dispatch(productsActions.fetchProducts());
+      updateState({ ...state, isLoading: false });
     } catch (err) {
       updateState({ isLoading: false, error: err.message });
-      return;
     }
-    updateState({ ...state, isLoading: false });
   };
 
   // Attach listener and remove when component unmounts
@@ -57,7 +56,7 @@ const ProductsOverviewScreen = (props) => {
   if (state.error) {
     return (
       <View style={styles.centered}>
-        <Text>An error occurred</Text>
+        <Text>{state.error}</Text>
         <Button
           title="Try again"
           onPress={loadProducts}

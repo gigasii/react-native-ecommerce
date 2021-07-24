@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useReducer } from "react";
+import React, { useEffect, useCallback, useReducer, useState } from "react";
 import {
   View,
   ScrollView,
@@ -6,6 +6,7 @@ import {
   Platform,
   Alert,
   KeyboardAvoidingView,
+  ActivityIndicator,
 } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { useSelector, useDispatch } from "react-redux";
@@ -13,7 +14,7 @@ import { useSelector, useDispatch } from "react-redux";
 import HeaderButton from "../../components/UI/HeaderButton";
 import * as productsActions from "../../store/actions/products";
 import Input from "../../components/UI/Input";
-
+import Colors from "../../constants/Colors";
 // Constants
 const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
 
@@ -56,7 +57,7 @@ const EditProductScreen = (props) => {
     state.products.userProducts.find((prod) => prod.id === prodId)
   );
 
-  // State
+  // Reducer state
   const [formState, dispatchFormState] = useReducer(formReducer, {
     inputValues: {
       title: editedProduct ? editedProduct.title : "",
@@ -73,8 +74,14 @@ const EditProductScreen = (props) => {
     formIsValid: editedProduct ? true : false,
   });
 
+  // State
+  const [state, updateState] = useState({
+    isLoading: false,
+    error: null,
+  });
+
   // Determine what event submit handler should be
-  const submitHandler = useCallback(() => {
+  const submitHandler = useCallback(async () => {
     // Validation failed
     if (!formState.formIsValid) {
       Alert.alert("Invalid inputs", "Please check the errors in the form", [
@@ -82,36 +89,36 @@ const EditProductScreen = (props) => {
       ]);
       return;
     }
-    // Edit
-    if (editedProduct) {
-      dispatch(
-        productsActions.updateProduct(
-          prodId,
-          formState.inputValues.title,
-          formState.inputValues.description,
-          formState.inputValues.imageUrl
-        )
-      );
+    updateState({ isLoading: true, error: null });
+    try {
+      // Edit
+      if (editedProduct) {
+        await dispatch(
+          productsActions.updateProduct(
+            prodId,
+            formState.inputValues.title,
+            formState.inputValues.description,
+            formState.inputValues.imageUrl
+          )
+        );
+      }
+      // Add
+      else {
+        await dispatch(
+          productsActions.createProduct(
+            formState.inputValues.title,
+            formState.inputValues.description,
+            formState.inputValues.imageUrl,
+            +formState.inputValues.price
+          )
+        );
+      }
+      // Navigate back to previous screen
+      props.navigation.goBack();
+    } catch (err) {
+      updateState({ isLoading: false, error: err.message });
     }
-    // Add
-    else {
-      dispatch(
-        productsActions.createProduct(
-          formState.inputValues.title,
-          formState.inputValues.description,
-          formState.inputValues.imageUrl,
-          +formState.inputValues.price
-        )
-      );
-    }
-    // Navigate back to previous screen
-    props.navigation.goBack();
   }, [formState]);
-
-  // Update handler with latest input changes
-  useEffect(() => {
-    props.navigation.setParams({ submit: submitHandler });
-  }, [submitHandler]);
 
   // Input change handler
   const inputChangeHandler = (inputIdentifier, inputValue, inputValidity) => {
@@ -122,6 +129,35 @@ const EditProductScreen = (props) => {
       input: inputIdentifier,
     });
   };
+
+  // Update handler with latest input changes
+  useEffect(() => {
+    console.log("Enters");
+    props.navigation.setParams({ submit: submitHandler });
+  }, [submitHandler]);
+
+  useEffect(() => {
+    if (state.error) {
+      Alert.alert("An error occurred", state.error, [
+        {
+          text: "Retry",
+          style: "default",
+        },
+      ]);
+    }
+  }, [state.error]);
+
+  // Logic
+  if (state.isLoading) {
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator
+          size="large"
+          color={Colors.primary}
+        ></ActivityIndicator>
+      </View>
+    );
+  }
 
   return (
     <KeyboardAvoidingView
@@ -211,6 +247,11 @@ const styles = StyleSheet.create({
   },
   keyboard: {
     flex: 1,
+  },
+  centered: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
