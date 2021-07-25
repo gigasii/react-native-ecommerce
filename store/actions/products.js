@@ -94,7 +94,6 @@ export const updateProduct = (id, title, description, imageUrl) => {
     if (!res.ok) {
       throw new Error("Request to update product failed");
     }
-    console.log("Passes");
     // Updates redux store
     dispatch({
       type: UPDATE_PRODUCT,

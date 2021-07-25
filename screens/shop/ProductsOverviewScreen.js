@@ -22,6 +22,7 @@ const ProductsOverviewScreen = (props) => {
   const dispatch = useDispatch();
   const [state, updateState] = useState({
     isLoading: true,
+    isRefreshing: false,
     error: null,
   });
 
@@ -33,21 +34,20 @@ const ProductsOverviewScreen = (props) => {
     });
   };
 
-  const loadProducts = async () => {
-    updateState({ isLoading: true, error: null });
+  const loadProducts = async (loadType) => {
+    updateState({ ...state, [loadType]: true, error: null });
     try {
       await dispatch(productsActions.fetchProducts());
-      updateState({ ...state, isLoading: false });
+      updateState({ ...state, [loadType]: false });
     } catch (err) {
-      updateState({ isLoading: false, error: err.message });
+      updateState({ ...state, [loadType]: false, error: err.message });
     }
   };
 
   // Attach listener and remove when component unmounts
   useEffect(() => {
-    const loadListener = props.navigation.addListener(
-      "willFocus",
-      loadProducts
+    const loadListener = props.navigation.addListener("willFocus", () =>
+      loadProducts("isLoading")
     );
     return () => loadListener.remove();
   }, []);
@@ -59,7 +59,7 @@ const ProductsOverviewScreen = (props) => {
         <Text>{state.error}</Text>
         <Button
           title="Try again"
-          onPress={loadProducts}
+          onPress={() => loadProducts("isLoading")}
           color={Colors.primary}
         />
       </View>
@@ -76,6 +76,8 @@ const ProductsOverviewScreen = (props) => {
 
   return (
     <FlatList
+      onRefresh={() => loadProducts("isRefreshing")}
+      refreshing={state.isRefreshing}
       data={products}
       keyExtractor={(item) => item.id}
       renderItem={(itemData) => (

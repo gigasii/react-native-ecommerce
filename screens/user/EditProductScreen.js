@@ -132,7 +132,6 @@ const EditProductScreen = (props) => {
 
   // Update handler with latest input changes
   useEffect(() => {
-    console.log("Enters");
     props.navigation.setParams({ submit: submitHandler });
   }, [submitHandler]);
 
@@ -221,6 +220,7 @@ const EditProductScreen = (props) => {
   );
 };
 
+// Screen styling
 EditProductScreen.navigationOptions = (navData) => {
   const submitFn = navData.navigation.getParam("submit");
   return {
@@ -241,6 +241,7 @@ EditProductScreen.navigationOptions = (navData) => {
   };
 };
 
+// Component styling
 const styles = StyleSheet.create({
   form: {
     margin: 20,
