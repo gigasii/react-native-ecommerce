@@ -18,7 +18,7 @@ import Colors from "../../constants/Colors";
 // Constants
 const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
 
-// Reducer (Actions event-listener)
+// Reducer (Actions listener)
 const formReducer = (state, action) => {
   switch (action.type) {
     case FORM_INPUT_UPDATE:
