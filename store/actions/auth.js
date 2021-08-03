@@ -12,7 +12,7 @@ export const signup = (email, password) => {
     });
     const result = await res.json();
     // Validation failed
-    if (res.status == 400) {
+    if (!res.ok) {
       throw new Error(result.message);
     }
     // Update redux store
@@ -33,7 +33,7 @@ export const login = (email, password) => {
     });
     const result = await res.json();
     // Validation failed
-    if (res.status == 400) {
+    if (!res.ok) {
       throw new Error(result.message);
     }
     // Update redux store
