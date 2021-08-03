@@ -1,6 +1,26 @@
-export const SIGNUP = "SIGNUP";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+// Constants
 export const LOGIN = "LOGIN";
+export const AUTH_FAIL = "AUTH_FAIL";
+export const STORAGE_TOKEN_CREDENTIALS = "CREDENTIALS";
 const BASE_URL = "http://192.168.0.199:8080/account";
+
+// Store token credentials locally on device storage
+const saveDataToStorage = (userId, token) => {
+  AsyncStorage.setItem(
+    STORAGE_TOKEN_CREDENTIALS,
+    JSON.stringify({
+      userId,
+      token,
+    })
+  );
+};
+
+// Token authentication failed
+export const tokenAuthFail = (message) => {
+  return { type: AUTH_FAIL, reason: message };
+};
 
 export const signup = (email, password) => {
   return async (dispatch) => {
@@ -15,11 +35,6 @@ export const signup = (email, password) => {
     if (!res.ok) {
       throw new Error(result.message);
     }
-    // Update redux store
-    dispatch({
-      type: SIGNUP,
-      userId: result._id,
-    });
   };
 };
 
@@ -42,5 +57,29 @@ export const login = (email, password) => {
       token: result.token,
       userId: result.id,
     });
+    // Store credentials
+    saveDataToStorage(result.id, result.token);
+  };
+};
+
+export const relog = (id, token) => {
+  return async (dispatch) => {
+    // Request for relog and check token
+    const res = await fetch(`${BASE_URL}/relog`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    // Validation failed
+    if (!res.ok) {
+      const data = await res.json();
+      throw new Error(data.message);
+    }
+    // Update redux store
+    dispatch({
+      type: LOGIN,
+      userId: id,
+      token,
+    });
+    // Store credentials
+    saveDataToStorage(id, token);
   };
 };

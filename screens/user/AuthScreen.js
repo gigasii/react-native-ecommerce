@@ -1,8 +1,9 @@
 import React, { useReducer, useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   View,
   Button,
+  Text,
   StyleSheet,
   KeyboardAvoidingView,
   Alert,
@@ -100,6 +101,9 @@ const AuthScreen = (props) => {
     }
   }, [state.error]);
 
+  // Check for auth error to be shown
+  const authMessage = useSelector((state) => state.auth.reason);
+
   return (
     <KeyboardAvoidingView
       behavior="padding"
@@ -153,6 +157,7 @@ const AuthScreen = (props) => {
               style={styles.spinner}
             />
           )}
+          {authMessage && <Text style={styles.errorText}>{authMessage}</Text>}
         </Card>
       </View>
     </KeyboardAvoidingView>
@@ -185,6 +190,11 @@ const styles = StyleSheet.create({
   },
   spinner: {
     margin: 20,
+  },
+  errorText: {
+    fontFamily: "open-sans",
+    color: "red",
+    fontSize: 13,
   },
 });
 
