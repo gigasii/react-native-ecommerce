@@ -29,6 +29,9 @@ const OrdersScreen = (props) => {
   };
 
   useEffect(() => {
+    // Use ComponentDidMount for initial page load
+    loadOrders();
+    // Use listener for subsequent page loads
     const loadListener = props.navigation.addListener("willFocus", loadOrders);
     return () => loadListener.remove();
   }, []);

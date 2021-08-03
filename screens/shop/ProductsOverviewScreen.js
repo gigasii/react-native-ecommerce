@@ -44,8 +44,10 @@ const ProductsOverviewScreen = (props) => {
     }
   };
 
-  // Attach listener and remove when component unmounts
   useEffect(() => {
+    // Use ComponentDidMount for initial page load
+    loadProducts("isLoading");
+    // Use listener for subsequent page loads
     const loadListener = props.navigation.addListener("willFocus", () =>
       loadProducts("isLoading")
     );
