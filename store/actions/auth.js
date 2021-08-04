@@ -2,6 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Constants
 export const LOGIN = "LOGIN";
+export const LOGOUT = "LOGOUT";
 export const AUTH_FAIL = "AUTH_FAIL";
 export const STORAGE_TOKEN_CREDENTIALS = "CREDENTIALS";
 const BASE_URL = "http://192.168.0.199:8080/account";
@@ -20,6 +21,12 @@ const saveDataToStorage = (userId, token) => {
 // Token authentication failed
 export const tokenAuthFail = (message) => {
   return { type: AUTH_FAIL, reason: message };
+};
+
+// Logout action
+export const logout = () => {
+  AsyncStorage.removeItem(STORAGE_TOKEN_CREDENTIALS);
+  return { type: LOGOUT };
 };
 
 export const signup = (email, password) => {

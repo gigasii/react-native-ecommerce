@@ -31,7 +31,9 @@ export const fetchProducts = () => {
     const result = await validateRespond(res);
     // Validation
     if (!result[VALIDATION_RESULT]) {
-      throw new Error(result[VALIDATION_FAILED_REASON]);
+      const error = new Error(result[VALIDATION_FAILED_REASON]);
+      error.code = res.status;
+      throw error;
     }
     const products = await res.json();
     // Convert data recieved

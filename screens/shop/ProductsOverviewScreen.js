@@ -16,6 +16,7 @@ import HeaderButton from "../../components/UI/HeaderButton";
 import Colors from "../../constants/Colors";
 import * as cartActions from "../../store/actions/cart";
 import * as productsActions from "../../store/actions/products";
+import * as authActions from "../../store/actions/auth";
 
 const ProductsOverviewScreen = (props) => {
   const products = useSelector((state) => state.products.availableProducts);
@@ -40,6 +41,11 @@ const ProductsOverviewScreen = (props) => {
       await dispatch(productsActions.fetchProducts());
       updateState({ ...state, [loadType]: false });
     } catch (err) {
+      if (err.code == 401) {
+        dispatch(authActions.tokenAuthFail(err.message));
+        props.navigation.navigate("Auth");
+        return;
+      }
       updateState({ ...state, [loadType]: false, error: err.message });
     }
   };
