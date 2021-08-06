@@ -8,10 +8,13 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.13.0",
     "@react-native-community/masked-view": "0.1.10",
     "@react-navigation/native": "^5.9.4",
     "expo": "~41.0.1",
     "expo-app-loading": "^1.1.2",
+    "expo-camera": "~11.0.2",
+    "expo-image-picker": "^10.2.2",
     "expo-status-bar": "~1.0.4",
     "moment": "^2.29.1",
     "react": "16.13.1",
@@ -28,8 +31,7 @@
     "react-navigation-stack": "^2.10.4",
     "react-redux": "^7.2.4",
     "redux": "^4.1.0",
-    "redux-thunk": "^2.3.0",
-    "@react-native-async-storage/async-storage": "^1.13.0"
+    "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0"

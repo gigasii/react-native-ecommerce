@@ -15,6 +15,7 @@ import HeaderButton from "../../components/UI/HeaderButton";
 import * as productsActions from "../../store/actions/products";
 import Input from "../../components/UI/Input";
 import Colors from "../../constants/Colors";
+import ImagePicker from "../../components/UI/ImagePicker";
 // Constants
 const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
 
@@ -178,16 +179,6 @@ const EditProductScreen = (props) => {
             initiallyValid={editedProduct}
             required
           />
-          <Input
-            id="imageUrl"
-            label="Image Url"
-            errorText="Invalid image url"
-            keyboardType="default"
-            returnKeyType="next"
-            onInputChange={inputChangeHandler}
-            initiallyValid={editedProduct}
-            required
-          />
           {editedProduct ? null : (
             <Input
               id="price"
@@ -213,6 +204,11 @@ const EditProductScreen = (props) => {
             initiallyValid={editedProduct}
             required
             minLength={1}
+          />
+          <ImagePicker
+            id="imageUrl"
+            initiallyValid={editedProduct}
+            onInputChange={inputChangeHandler}
           />
         </View>
       </ScrollView>
