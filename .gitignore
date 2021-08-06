@@ -13,3 +13,4 @@ web-build/
 .DS_Store
 .vscode
 package-lock.json
+backend/.env
