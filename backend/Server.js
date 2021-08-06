@@ -2,6 +2,7 @@
 import Express from "express";
 import Mongoose from "mongoose";
 import env from "dotenv";
+import cors from "cors";
 import productRoutes from "./routes/Product.js";
 import orderRoutes from "./routes/Order.js";
 import accountRoutes from "./routes/Account.js";
@@ -11,6 +12,15 @@ env.config();
 const app = Express();
 const PORT = process.env.PORT || 8080;
 const MONGO_DB_URI = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.7daxr.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
+
+// Allow cross-origin resource sharing (CORS)
+app.use(
+  cors({
+    origin: "*",
+    methods: ["OPTIONS", "GET", "POST", "PUT", "PATCH", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 
 // Request parsing
 app.use(Express.json({ limit: "50mb" }));
