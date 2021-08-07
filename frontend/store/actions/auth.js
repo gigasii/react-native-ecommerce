@@ -1,11 +1,12 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Url from "../../constants/Utilities";
 
 // Constants
 export const LOGIN = "LOGIN";
 export const LOGOUT = "LOGOUT";
 export const AUTH_FAIL = "AUTH_FAIL";
 export const STORAGE_TOKEN_CREDENTIALS = "CREDENTIALS";
-const BASE_URL = "http://192.168.0.199:8080/account";
+const BASE_URL = `${Url}/account`;
 
 // Store token credentials locally on device storage
 const saveDataToStorage = (userId, token) => {

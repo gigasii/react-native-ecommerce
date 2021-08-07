@@ -1,9 +1,10 @@
 import Order from "../../models/order";
+import Url from "../../constants/Utilities";
 
 // Constants
 export const ADD_ORDER = "ADD_ORDER";
 export const SET_ORDERS = "SET_ORDERS";
-const BASE_URL = "http://192.168.0.199:8080/order";
+const BASE_URL = `${Url}/order`;
 
 export const fetchOrders = () => {
   return async (dispatch) => {

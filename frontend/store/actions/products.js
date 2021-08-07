@@ -1,13 +1,14 @@
 import Product from "../../models/product";
+import Url from "../../constants/Utilities";
 
 // Constants
 export const DELETE_PRODUCT = "DELETE_PRODUCT";
 export const CREATE_PRODUCT = "CREATE_PRODUCT";
 export const UPDATE_PRODUCT = "UPDATE_PRODUCT";
 export const SET_PRODUCTS = "SET_PRODUCTS";
-const BASE_URL = "http://192.168.0.199:8080/product";
 const VALIDATION_RESULT = 0;
 const VALIDATION_FAILED_REASON = 1;
+const BASE_URL = `${Url}/product`;
 
 // Verify the server status of the respond
 const validateRespond = async (res) => {
