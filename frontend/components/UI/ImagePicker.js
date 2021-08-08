@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   TouchableNativeFeedback,
   Platform,
+  Alert,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { Camera } from "expo-camera";
@@ -23,12 +24,19 @@ const ImgPicker = (props) => {
 
   // Handlers
   const takeImageHandler = async () => {
-    // Ask users for permission
-    const result = await Camera.requestPermissionsAsync();
     // Check if permissions has been granted
-    if (result.status != "granted") {
-      return;
+    const { granted } = await Camera.getPermissionsAsync();
+    if (!granted) {
+      // Ask users for permission
+      const result = await Camera.requestPermissionsAsync();
+      if (!result.granted) {
+        Alert.alert("Invalid", "Camera permissions required", [
+          { text: "Close", style: "default" },
+        ]);
+        return;
+      }
     }
+
     // Launch camera
     const image = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
