@@ -7,9 +7,11 @@ import {
   Button,
   Platform,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
+import * as Notifications from "expo-notifications";
 // Custom imports
 import ProductItem from "../../components/shop/ProductItem";
 import HeaderButton from "../../components/UI/HeaderButton";
@@ -19,8 +21,9 @@ import * as productsActions from "../../store/actions/products";
 import * as authActions from "../../store/actions/auth";
 
 const ProductsOverviewScreen = (props) => {
-  const products = useSelector((state) => state.products.availableProducts);
   const dispatch = useDispatch();
+  const products = useSelector((state) => state.products.availableProducts);
+  // State
   const [state, updateState] = useState({
     isLoading: true,
     isRefreshing: false,
@@ -50,8 +53,24 @@ const ProductsOverviewScreen = (props) => {
     }
   };
 
+  // Notification request
+  const requestNotificationPermission = async () => {
+    // Check if permissions has been granted
+    const { granted } = await Notifications.getPermissionsAsync();
+    if (!granted) {
+      // Ask users for permission
+      const result = await Notifications.requestPermissionsAsync();
+      if (result.granted) {
+        // Permission granted, retrieve Expo's notification push token
+        const token = (await Notifications.getExpoPushTokenAsync()).data;
+        dispatch(authActions.updateNotificationStatus(token));
+      }
+    }
+  };
+
   useEffect(() => {
     // Use ComponentDidMount for initial page load
+    requestNotificationPermission();
     loadProducts("isLoading");
     // Use listener for subsequent page loads
     const loadListener = props.navigation.addListener("willFocus", () =>

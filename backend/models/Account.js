@@ -15,6 +15,11 @@ const accountSchema = new Schema(
       type: String,
       required: true,
     },
+    notificationToken: {
+      type: String,
+      required: false,
+      default: "",
+    },
   },
   { versionKey: false }
 );

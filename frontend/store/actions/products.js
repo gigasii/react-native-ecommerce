@@ -108,11 +108,11 @@ export const createProduct = (title, description, imageUrl, price) => {
       type: CREATE_PRODUCT,
       productData: {
         id: product._id,
+        ownerId: userId,
         title,
         description,
         imageUrl,
         price,
-        ownerId: userId,
       },
     });
   };

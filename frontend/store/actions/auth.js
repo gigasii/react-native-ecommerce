@@ -1,10 +1,12 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+// Custom imports
 import Url from "../../constants/Utilities";
 
-// Constants
+// Action identifiers
 export const LOGIN = "LOGIN";
 export const LOGOUT = "LOGOUT";
 export const AUTH_FAIL = "AUTH_FAIL";
+// Constants
 export const STORAGE_TOKEN_CREDENTIALS = "CREDENTIALS";
 const BASE_URL = `${Url}/account`;
 
@@ -28,6 +30,19 @@ export const tokenAuthFail = (message) => {
 export const logout = () => {
   AsyncStorage.removeItem(STORAGE_TOKEN_CREDENTIALS);
   return { type: LOGOUT };
+};
+
+// Update user's notification push token
+export const updateNotificationStatus = (token) => {
+  return async (dispatch, getState) => {
+    const userId = getState().auth.userId;
+    // Request to update user's notification status
+    fetch(`${BASE_URL}/update-notification-status`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId, token }),
+    });
+  };
 };
 
 export const signup = (email, password) => {

@@ -32,17 +32,16 @@ export const fetchOrders = () => {
 };
 
 export const addOrder = (cartItems, totalAmount) => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
     // Request for orders from server
     const res = await fetch(`${BASE_URL}/add-order`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         cartItems,
         totalAmount,
         date: new Date().toISOString(),
+        buyer: getState().auth.userId,
       }),
     });
     if (!res.ok) {

@@ -22,6 +22,7 @@ const CartScreen = (props) => {
     for (const key in state.cart.items) {
       transformedCartItems.push({
         productId: key,
+        ownerId: state.cart.items[key].ownerId,
         productTitle: state.cart.items[key].productTitle,
         productPrice: state.cart.items[key].productPrice,
         quantity: state.cart.items[key].quantity,

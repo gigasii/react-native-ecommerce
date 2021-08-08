@@ -56,4 +56,14 @@ router.get("/relog", auth, async (req, res) => {
   res.status(200).json({ message: "Relog successful" });
 });
 
+router.post("/update-notification-status", async (req, res) => {
+  const { userId, token } = req.body;
+  await Account.findOneAndUpdate(
+    { _id: userId },
+    { notificationToken: token },
+    { new: true }
+  );
+  res.status(200).json({ message: "Updated user's notification status" });
+});
+
 export default router;
